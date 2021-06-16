@@ -1,0 +1,44 @@
+module ALU #(parameter N=5) 
+	(input logic[N-1:0] a, b,input logic[3:0] s,output logic[N-1:0] out, output logic[6:0] seg1, seg2, output logic flagN, flagZ, flagO, flagC);
+	
+	logic [N-1:0] sumresO;
+	logic cout;
+	
+	
+	//Arithmethics
+	sumador_restador #(N) srAlu(a,b,s,sumresO,flagC);
+	
+	//Flags
+	flagN #(N) fN(s,sumresO,a*b,a/b,flagN);
+	flagZ #(N) fZ(s,sumresO,a*b,a/b,a%b,flagZ);
+	
+	flagO #(N) fO(a,b,sumresO,s,foaux,flagO);
+	
+	
+	deco dec ( out, seg1, seg2);
+	 always @*
+		begin
+			case(s)
+				4'b0000 : 
+					out = sumresO;//Suma
+				4'b0001 : 
+					out = sumresO;//Resta
+				4'b0010 : 
+					out = a*b;//Multiplicacion
+				4'b0011 : 
+					out = a/b;//Division
+				4'b0100 : 
+					out = a%b;//Modulo
+				4'b0101 : 
+					out = a&b;//and
+				4'b0110 : 
+					out = a|b;//or
+				4'b0111 : 
+					out = a^b;//xor
+				4'b1000 : 
+					out = a<<1;//ShiftL
+				4'b1001 : 
+					out = a>>1;//ShiftR
+			endcase
+		end
+endmodule 

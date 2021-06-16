@@ -1,0 +1,5 @@
+module toprom(input clk, rst);
+logic [7:0] address, q;
+ROM memoria (address, clk, q);
+counter cn(rst, clk, 1'b1, address); 
+endmodule 
